@@ -660,7 +660,7 @@ static NSString *const kConfigOpenIDRealmKey = @"GIDOpenIDRealm";
   return [OIDAuthorizationService presentAuthorizationRequest:request externalUserAgent:externalUserAgent callback:callback];
 }
 #endif // TARGET_OS_IOS
-- 
+
 - (void)authenticateInteractivelyWithOptions:(GIDSignInInternalOptions *)options {
   NSString *emmSupport;
 #if TARGET_OS_IOS && !TARGET_OS_MACCATALYST
