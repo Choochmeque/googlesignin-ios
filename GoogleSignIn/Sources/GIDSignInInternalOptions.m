@@ -55,7 +55,7 @@ NS_ASSUME_NONNULL_BEGIN
 #endif // TARGET_OS_IOS || TARGET_OS_MACCATALYST
     options->_loginHint = loginHint;
     options->_completion = completion;
-    options->_scopes = [GIDScopes scopesWithBasicProfile:scopes];
+    options->_scopes = scopes; //[GIDScopes scopesWithBasicProfile:scopes];
     options->_nonce = nonce;
   }
   return options;
