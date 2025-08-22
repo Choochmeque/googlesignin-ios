@@ -646,6 +646,21 @@ static NSString *const kConfigOpenIDRealmKey = @"GIDOpenIDRealm";
 
 #pragma mark - Authentication flow
 
+#if TARGET_OS_IOS
++ (id<OIDExternalUserAgentSession>) presentAuthorizationRequest:(OIDAuthorizationRequest *)request
+    presentingViewController:(UIViewController *)presentingViewController
+                    callback:(OIDAuthorizationCallback)callback {
+  id<OIDExternalUserAgent> externalUserAgent;
+#if TARGET_OS_MACCATALYST
+  externalUserAgent = [[OIDExternalUserAgentCatalyst alloc]
+      initWithPresentingViewController:presentingViewController];
+#else // TARGET_OS_MACCATALYST
+  externalUserAgent = [[OIDExternalUserAgentIOS alloc] initWithPresentingViewController:presentingViewController];
+#endif // TARGET_OS_MACCATALYST
+  return [OIDAuthorizationService presentAuthorizationRequest:request externalUserAgent:externalUserAgent callback:callback];
+}
+#endif // TARGET_OS_IOS
+- 
 - (void)authenticateInteractivelyWithOptions:(GIDSignInInternalOptions *)options {
   NSString *emmSupport;
 #if TARGET_OS_IOS && !TARGET_OS_MACCATALYST
@@ -658,7 +673,7 @@ static NSString *const kConfigOpenIDRealmKey = @"GIDOpenIDRealm";
                              completion:^(OIDAuthorizationRequest * _Nullable request,
                                           NSError * _Nullable error) {
     self->_currentAuthorizationFlow =
-        [OIDAuthorizationService presentAuthorizationRequest:request
+        [GIDSignIn presentAuthorizationRequest:request
 #if TARGET_OS_IOS || TARGET_OS_MACCATALYST
                                     presentingViewController:options.presentingViewController
 #elif TARGET_OS_OSX
